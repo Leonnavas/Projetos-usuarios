@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Auth;
+namespace App;
 
 class User
 {
@@ -18,38 +18,29 @@ class User
         $this->senhaHash = $senhaHash;
     }
 
-    public function getId(): int
-    {
-        return $this->id;
-    }
+    public function getId(): int { return $this->id; }
+    public function getNome(): string { return $this->nome; }
+    public function getEmail(): string { return $this->email; }
+    public function getSenhaHash(): string { return $this->senhaHash; }
+    public function setSenhaHash(string $senhaHash): void { $this->senhaHash = $senhaHash; }
 
-    public function getNome(): string
-    {
-        return $this->nome;
-    }
-
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    public function getSenhaHash(): string
-    {
-        return $this->senhaHash;
-    }
-
-    public function setSenhaHash(string $senhaHash): void
-    {
-        $this->senhaHash = $senhaHash;
-    }
 
     public function toArray(): array
     {
         return [
             'id' => $this->id,
             'nome' => $this->nome,
+            'email' => $this->email
+        ];
+    }
+
+    public function toArrayCompleto(): array
+    {
+        return [
+            'id' => $this->id,
+            'nome' => $this->nome,
             'email' => $this->email,
-            'senha' => $this->senhaHash,
+            'senhaHash' => $this->senhaHash
         ];
     }
 }
