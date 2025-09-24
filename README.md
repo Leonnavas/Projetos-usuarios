@@ -1,3 +1,6 @@
+RA:2010317 
+Leonardo Nunes Navas
+
 # Sistema de Usuários e Autenticação (PHP - simples)
 
 Baseado no PRD fornecido (exercício **Sistema de Usuários e Autenticação**).  
@@ -17,15 +20,11 @@ Documento de referência: `projeto-2-user-auth-prd.pdf`. fileciteturn0file
 - Casos de uso implementados (cadastro, login, reset).
 - Código organizado em `src/` e documentação mínima.
 
-## Como rodar (XAMPP)
-1. Extraia o projeto para `C:/xampp/htdocs/projeto_usuarios` (ou similar).
-2. Abra o navegador e acesse:
-   - Lista de usuários: `http://localhost/projeto_usuarios/public/index.php?action=list`
-   - Registrar: `http://localhost/projeto_usuarios/public/index.php?action=register&nome=Nome&email=meu@email.com&senha=Senha123`
-   - Login: `http://localhost/projeto_usuarios/public/index.php?action=login&email=meu@email.com&senha=Senha123`
-   - Reset: `http://localhost/projeto_usuarios/public/index.php?action=reset&id=1&senha=NovaSenha1`
-3. Para rodar os testes via CLI:
-   - `php tests/run_tests.php`
+#. Rodar testes
+php tests/run_tests.php
+
+#. Testar no navegador
+# http://localhost/projeto_usuarios_php/public/index.php?action=list
 
 ## Casos de teste documentados (exemplos)
 1. Cadastro válido → nome: Maria Oliveira, email: maria@email.com, senha: Senha123. Resultado: usuário cadastrado com sucesso.
