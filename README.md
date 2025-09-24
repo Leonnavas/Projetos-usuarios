@@ -1,7 +1,7 @@
 RA:2010317 
 Leonardo Nunes Navas
 
-# Sistema de Usuários e Autenticação (PHP - simples)
+# Sistema de Usuários e Autenticação (PHP)
 
 Baseado no PRD fornecido (exercício **Sistema de Usuários e Autenticação**).  
 Documento de referência: `projeto-2-user-auth-prd.pdf`. fileciteturn0file0
