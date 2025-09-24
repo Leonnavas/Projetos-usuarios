@@ -1,18 +1,25 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Auth;
+namespace App;
 
 class UserManager
 {
     /** @var User[] */
     private array $users = [];
+    private array $emailIndex = []; // Índice para otimizar buscas
 
     public function __construct(array $usersArray = [])
     {
         foreach ($usersArray as $u) {
-            $user = new User((int)$u['id'], (string)$u['nome'], (string)$u['email'], (string)$u['senha']);
+            // Validação dos dados de entrada
+            if (!isset($u['id'], $u['nome'], $u['email'], $u['senha'])) {
+                throw new \InvalidArgumentException("Dados do usuário incompletos");
+            }
+            
+            $user = new User((int)$u['id'], $u['nome'], $u['email'], $u['senha']);
             $this->users[$user->getId()] = $user;
+            $this->emailIndex[strtolower($user->getEmail())] = $user;
         }
     }
 
@@ -20,19 +27,14 @@ class UserManager
     {
         $out = [];
         foreach ($this->users as $u) {
-            $out[] = $u->toArray();
+            $out[] = $u->toArray(); // Dados seguros
         }
         return $out;
     }
 
     public function findByEmail(string $email): ?User
     {
-        foreach ($this->users as $u) {
-            if (strtolower($u->getEmail()) === strtolower($email)) {
-                return $u;
-            }
-        }
-        return null;
+        return $this->emailIndex[strtolower($email)] ?? null;
     }
 
     public function addUser(string $nome, string $email, string $senha): array
@@ -52,9 +54,15 @@ class UserManager
         $newId = $this->nextId();
         $hash = password_hash($senha, PASSWORD_DEFAULT);
         $user = new User($newId, $nome, $email, $hash);
+        
         $this->users[$newId] = $user;
+        $this->emailIndex[strtolower($email)] = $user;
 
-        return ['success' => true, 'message' => 'Usuário cadastrado com sucesso', 'user' => $user->toArray()];
+        return [
+            'success' => true, 
+            'message' => 'Usuário cadastrado com sucesso', 
+            'user' => $user->toArray() // Dados seguros
+        ];
     }
 
     public function login(string $email, string $senha): array
@@ -68,7 +76,11 @@ class UserManager
             return ['success' => false, 'message' => 'Credenciais inválidas'];
         }
 
-        return ['success' => true, 'message' => 'Login realizado com sucesso', 'user' => $user->toArray()];
+        return [
+            'success' => true, 
+            'message' => 'Login realizado com sucesso', 
+            'user' => $user->toArray() // Dados seguros
+        ];
     }
 
     public function resetSenha(int $id, string $novaSenha): array
@@ -82,7 +94,11 @@ class UserManager
         }
 
         $hash = password_hash($novaSenha, PASSWORD_DEFAULT);
-        $this->users[$id]->setSenhaHash($hash);
+        $user = $this->users[$id];
+        $user->setSenhaHash($hash);
+        
+        // Atualizar índice
+        $this->emailIndex[strtolower($user->getEmail())] = $user;
 
         return ['success' => true, 'message' => 'Senha alterada com sucesso'];
     }
@@ -92,7 +108,12 @@ class UserManager
         if (empty($this->users)) {
             return 1;
         }
-
         return max(array_keys($this->users)) + 1;
+    }
+
+    // Método auxiliar para testes
+    public function getUserCount(): int
+    {
+        return count($this->users);
     }
 }
